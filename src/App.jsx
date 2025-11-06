@@ -6,13 +6,17 @@ import { HomePage } from "./pages/home";
 import { homeLoader } from "./pages/home/loader";
 import { SignInPage } from "./pages/sign-in";
 import { UserPage } from "./pages/user";
+import { ToastContainer } from "react-toastify";
+import ToastProvider from "./providers/ToastProvider";
 
 const Layout = () => {
   return (
     <div className="container">
-      <Header />
-      <Outlet />
-      <Footer />
+      <ToastProvider>
+        <Header />
+        <Outlet />
+        <Footer />
+      </ToastProvider>
     </div>
   );
 };
