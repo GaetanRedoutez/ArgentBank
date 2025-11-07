@@ -16,7 +16,6 @@ export const SignInPage = () => {
 
   const submitForm = async (data) => {
     const payload = { email: data.username, password: data.password };
-    console.log(payload);
     dispatch(userLogin(payload));
   };
 

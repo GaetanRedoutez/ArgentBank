@@ -1,7 +1,16 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../features/auth/authActions";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("./");
+  };
   return (
     <nav className="main-nav">
       <a className="main-nav-logo" href="/">
@@ -19,7 +28,7 @@ export const Header = () => {
               <i className="fa fa-user-circle"></i>
               NOM
             </a>
-            <a className="main-nav-item" href="./">
+            <a className="main-nav-item" onClick={handleLogout}>
               <i className="fa fa-sign-out"></i>
               Sign Out
             </a>

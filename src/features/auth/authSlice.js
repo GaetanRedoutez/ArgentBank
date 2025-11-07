@@ -13,13 +13,7 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout: (state) => {
-      localStorage.removeItem("token");
-      state.token = null;
-      state.isAuthenticated = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(userLogin.pending, (state) => {
@@ -34,6 +28,11 @@ const authSlice = createSlice({
       .addCase(userLogin.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
+      })
+      .addCase("auth/logout", (state) => {
+        state.token = null;
+        state.isAuthenticated = false;
+        state.error = null;
       });
   },
 });

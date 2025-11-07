@@ -18,3 +18,8 @@ export const userLogin = createAsyncThunk(
     }
   }
 );
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("token");
+  dispatch({ type: "auth/logout" });
+};
