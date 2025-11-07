@@ -1,31 +1,29 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { userLogin } from "../../features/auth/authActions";
+import { userProfile } from "../../features/user/userActions";
 
 export const SignInPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error, isAuthenticated } = useSelector(
-    (state) => state.auth
-  );
+  const { loading } = useSelector((state) => state.auth);
 
   const { register, handleSubmit } = useForm();
 
   const submitForm = async (data) => {
     const payload = { email: data.username, password: data.password };
-    dispatch(userLogin(payload));
+    try {
+      await dispatch(userLogin(payload)).unwrap();
+
+      await dispatch(userProfile()).unwrap();
+
+      navigate("/user");
+    } catch (err) {
+      toast.error(err);
+    }
   };
-
-  useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
-
-  useEffect(() => {
-    if (isAuthenticated) navigate("/user");
-  }, [isAuthenticated, navigate]);
 
   return (
     <main className="main bg-dark">
