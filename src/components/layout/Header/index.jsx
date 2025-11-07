@@ -1,8 +1,7 @@
-import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const Header = () => {
-  const location = useLocation();
-  const isUserPage = location.pathname === "/user";
+  const { isAuthenticated } = useSelector((state) => state.auth);
   return (
     <nav className="main-nav">
       <a className="main-nav-logo" href="/">
@@ -14,13 +13,13 @@ export const Header = () => {
         <h1 className="sr-only">Argent Bank</h1>
       </a>
       <div className="main-nav-items">
-        {isUserPage ? (
+        {isAuthenticated ? (
           <>
-            <a className="main-nav-item" href="./user.html">
+            <a className="main-nav-item" href="./user">
               <i className="fa fa-user-circle"></i>
-              Tony
+              NOM
             </a>
-            <a className="main-nav-item" href="./index.html">
+            <a className="main-nav-item" href="./">
               <i className="fa fa-sign-out"></i>
               Sign Out
             </a>

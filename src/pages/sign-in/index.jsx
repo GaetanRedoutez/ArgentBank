@@ -1,22 +1,40 @@
-import { useNavigate } from "react-router-dom";
-import { login } from "../../service/user.service";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from "../../features/auth/authSlice";
+import { login } from "../../service/user.service";
 
 export const SignInPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   const { register, handleSubmit } = useForm();
 
   const submitForm = async (data) => {
+    dispatch(loginStart());
+
     try {
       const res = await login(data.username, data.password);
 
-      if (res.status == 200) {
+      if (res.status === 200) {
+        dispatch(
+          loginSuccess({
+            user: data.username,
+            token: res.data.body.token,
+          })
+        );
+
         navigate("/user");
       }
-    } catch {
-      toast.error("Failed to login");
+    } catch (error) {
+      dispatch(loginFailure(error.message));
+      toast.error(error.message);
     }
   };
 
@@ -32,6 +50,7 @@ export const SignInPage = () => {
               type="text"
               id="username"
               {...register("username", { required: true })}
+              disabled={loading}
             />
           </div>
           <div className="input-wrapper">
@@ -40,6 +59,7 @@ export const SignInPage = () => {
               type="password"
               id="password"
               {...register("password", { required: true })}
+              disabled={loading}
             />
           </div>
           <div className="input-remember">
@@ -50,8 +70,8 @@ export const SignInPage = () => {
             />
             <label htmlFor="remember-me">Remember me</label>
           </div>
-          <button className="sign-in-button" type="submit">
-            Sign In
+          <button className="sign-in-button" type="submit" disabled={loading}>
+            {loading ? "Loading..." : "Sign In"}
           </button>
         </form>
       </section>
