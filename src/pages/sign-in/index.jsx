@@ -1,42 +1,32 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-} from "../../features/auth/authSlice";
-import { login } from "../../service/user.service";
+import { userLogin } from "../../features/auth/authActions";
 
 export const SignInPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
   const { register, handleSubmit } = useForm();
 
   const submitForm = async (data) => {
-    dispatch(loginStart());
-
-    try {
-      const res = await login(data.username, data.password);
-
-      if (res.status === 200) {
-        dispatch(
-          loginSuccess({
-            user: data.username,
-            token: res.data.body.token,
-          })
-        );
-
-        navigate("/user");
-      }
-    } catch (error) {
-      dispatch(loginFailure(error.message));
-      toast.error(error.message);
-    }
+    const payload = { email: data.username, password: data.password };
+    console.log(payload);
+    dispatch(userLogin(payload));
   };
+
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/user");
+  }, [isAuthenticated, navigate]);
 
   return (
     <main className="main bg-dark">
@@ -50,6 +40,7 @@ export const SignInPage = () => {
               type="text"
               id="username"
               {...register("username", { required: true })}
+              required
               disabled={loading}
             />
           </div>
@@ -58,6 +49,7 @@ export const SignInPage = () => {
             <input
               type="password"
               id="password"
+              required
               {...register("password", { required: true })}
               disabled={loading}
             />
