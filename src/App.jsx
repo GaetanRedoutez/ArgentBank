@@ -6,8 +6,17 @@ import { HomePage } from "./pages/home";
 import { homeLoader } from "./pages/home/loader";
 import { SignInPage } from "./pages/sign-in";
 import { UserPage } from "./pages/user";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./features/auth/authActions";
 
 const Layout = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
   return (
     <div className="container">
       <Header />

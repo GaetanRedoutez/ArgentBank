@@ -29,6 +29,10 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = payload;
       })
+      .addCase("auth/checkAuth", (state, { payload }) => {
+        state.token = payload.token;
+        state.isAuthenticated = payload.isAuthenticated;
+      })
       .addCase("auth/logout", (state) => {
         state.token = null;
         state.isAuthenticated = false;

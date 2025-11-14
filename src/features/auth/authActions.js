@@ -23,3 +23,12 @@ export const logout = () => (dispatch) => {
   localStorage.removeItem("token");
   dispatch({ type: "auth/logout" });
 };
+
+export const checkAuth = () => (dispatch) => {
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+  dispatch({
+    type: "auth/checkAuth",
+    payload: { token, isAuthenticated: !!token },
+  });
+};
