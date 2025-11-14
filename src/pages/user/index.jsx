@@ -1,14 +1,15 @@
 import { useSelector } from "react-redux";
 
 export const UserPage = () => {
-  const user = useSelector((state) => state.user);
+  const { firstName, lastName } = useSelector((state) => state.user);
+
   return (
     <main className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          {user.firstName} {user.lastName}!
+          {firstName} {lastName}!
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>

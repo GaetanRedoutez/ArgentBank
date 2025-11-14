@@ -1,13 +1,20 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../features/auth/authActions";
+import { userProfile } from "../../../features/user/userActions";
 
 export const Header = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { id, firstName } = useSelector((state) => state.user);
 
-  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    if (!id) {
+      dispatch(userProfile());
+    }
+  }, [id, dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -29,7 +36,7 @@ export const Header = () => {
           <>
             <a className="main-nav-item" href="./user">
               <i className="fa fa-user-circle"></i>
-              {user.firstName}
+              {firstName}
             </a>
             <a className="main-nav-item" onClick={handleLogout}>
               <i className="fa fa-sign-out"></i>
