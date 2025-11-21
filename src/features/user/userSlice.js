@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userProfile } from "./userActions";
+import { userProfile, updateUserProfile } from "./userActions";
 
 const initialState = {
   id: null,
@@ -8,6 +8,8 @@ const initialState = {
   lastName: null,
   createdAt: null,
   updatedAt: null,
+  loading: false,
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -30,6 +32,20 @@ const authSlice = createSlice({
         state.updatedAt = payload.updatedAt;
       })
       .addCase(userProfile.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.firstName = payload.firstName;
+        state.lastName = payload.lastName;
+        state.updatedAt = payload.updatedAt;
+      })
+      .addCase(updateUserProfile.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
       });

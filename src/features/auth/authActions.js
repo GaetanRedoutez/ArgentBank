@@ -26,7 +26,6 @@ export const logout = () => (dispatch) => {
 
 export const checkAuth = () => (dispatch) => {
   const token = localStorage.getItem("token");
-  console.log("token", token);
   dispatch({
     type: "auth/checkAuth",
     payload: { token, isAuthenticated: !!token },

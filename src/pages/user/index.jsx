@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateUserProfile,
-  userProfile,
-} from "../../features/user/userActions";
+import { updateUserProfile } from "../../features/user/userActions";
+import { toast } from "react-toastify";
 
 export const UserPage = () => {
   const dispatch = useDispatch();
@@ -15,11 +13,10 @@ export const UserPage = () => {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateUserProfile(data)).unwrap();
-      dispatch(userProfile());
       setIsEditing(false);
     } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
-      alert("Erreur lors de la mise à jour du profil");
+      console.error("Failed to update profile:", error);
+      toast.error("Failed to update profile");
     }
   };
 
