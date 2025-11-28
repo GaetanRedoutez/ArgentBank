@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserProfile } from "../../features/user/userActions";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { updateUserProfile } from "../../features/user/userActions";
 
 export const UserPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { firstName, lastName } = useSelector((state) => state.user);
+  const { token } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
@@ -24,6 +27,12 @@ export const UserPage = () => {
     reset({ firstName, lastName });
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/sign-in");
+    }
+  }, [token]);
 
   return (
     <main className="main bg-dark">
