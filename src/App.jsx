@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { Footer } from "./components/layout/Footer";
+import { Header } from "./components/layout/Header";
+import { ErrorPage } from "./pages/error";
+import { HomePage } from "./pages/home";
+import { homeLoader } from "./pages/home/loader";
+import { SignInPage } from "./pages/sign-in";
+import { UserPage } from "./pages/user";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./features/auth/authActions";
 
-function App() {
-  const [count, setCount] = useState(0)
+const Layout = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
+    <div className="container">
+      <Header />
+      <Outlet />
+      <Footer />
+    </div>
+  );
+};
+
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        errorElement: <ErrorPage />,
+        loader: homeLoader,
+        element: <HomePage />,
+      },
+      {
+        path: "sign-in",
+        errorElement: <ErrorPage />,
+        element: <SignInPage />,
+      },
+      {
+        path: "user",
+        errorElement: <ErrorPage />,
+        element: <UserPage />,
+      },
+      { path: "*", element: <ErrorPage /> },
+    ],
+  },
+]);
+
+function App() {
+  return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <RouterProvider router={router} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
